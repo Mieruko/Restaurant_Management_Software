@@ -24,19 +24,12 @@ frontend/
 │ ├── invoice.html
 │ └── report.html
 └── services/
-<<<<<<< HEAD
-├── apiMenu.js
-├── apiOrder.js
-├── apiInvoice.js
-└── apiReport.js
-git
-=======
-  ├── apiMenu.js
-  ├── apiOrder.js
-  ├── apiInvoice.js
-  └── apiReport.js
+    ├── apiMenu.js
+    ├── apiOrder.js
+    ├── apiInvoice.js
+    └── apiReport.js
 
->>>>>>> 8f04b4b4cb3fff7a0f92d4b8e0b6e85912eed03c
+
 
 ## 🚀 Cách chạy
 1. Mở từng file HTML trong thư mục `pages/` bằng trình duyệt để xem giao diện.  
