@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Giới thiệu & Đăng nhập</title>
+  <link rel="stylesheet" href="css/login_style.css">
+</head>
+<body>
+
+  <!-- 🔶 CHÈN LOGO NHÀ HÀNG -->
+  <div class="logo">
+    <img src="https://gochanoi.com.vn/wp-content/uploads/2015/02/logo.png" alt="Logo Nhà hàng">
+  </div>
+
+  <!-- 🔶 VÙNG CHÈN BACKGROUND CHO TRANG GIỚI THIỆU -->
+  <div class="index-background">
+    <div class="container">
+      <h1>Chào mừng đến với Nhà hàng Trải nghiệm</h1>
+      <p>Khám phá hương vị độc đáo, không gian ấm cúng và dịch vụ tận tâm.</p>
+      <button onclick="openLogin()">Đăng nhập</button>
+    </div>
+  </div>
+
+  <!-- 🔶 POPUP ĐĂNG NHẬP -->
+  <div id="loginPopup" class="popup-overlay">
+    <div class="popup-box">
+      <h2>Đăng nhập</h2>
+      <form action="login.php" method="post">
+        <input type="text" name="username" placeholder="Tên đăng nhập" required><br>
+        <input type="password" name="password" placeholder="Mật khẩu" required><br>
+        <button type="submit">Login</button>
+      </form>
+      <button onclick="closeLogin()">Đóng</button>
+    </div>
+  </div>
+
+  <!-- 🔶 SCRIPT KÍCH HOẠT POPUP -->
+  <script>
+    function openLogin() {
+      const popup = document.getElementById("loginPopup");
+      popup.style.display = "flex";
+
+      const box = popup.querySelector(".popup-box");
+      box.style.animation = "none";
+      void box.offsetWidth;
+      box.style.animation = "popupFadeIn 0.4s ease forwards";
+    }
+
+    function closeLogin() {
+      document.getElementById("loginPopup").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

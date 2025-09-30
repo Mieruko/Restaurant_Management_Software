@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Báo cáo doanh thu</title>
+  <link rel="stylesheet" href="../css/dashboard_style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Quản lý nhà hàng</h2>
+    <a href="tables.html">Bàn ăn</a>
+    <a href="menu.html">Thực đơn</a>
+    <a href="orders.html">Đơn hàng</a>
+    <a href="invoices.html">Hóa đơn</a>
+    <a href="staff.html">Nhân viên</a>
+    <a href="report.html" class="active">Báo cáo</a>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <h1>Báo cáo doanh thu</h1>
+    <p>Thống kê doanh thu và món bán chạy</p>
+    <button class="add-button">Chọn thời gian</button>
+
+    <div class="report-summary">
+      <div class="report-box">
+        <h3>Doanh thu</h3>
+        <p><!-- Dữ liệu doanh thu sẽ được tải từ cơ sở dữ liệu --></p>
+      </div>
+      <div class="report-box">
+        <h3>Top món</h3>
+        <p><!-- Dữ liệu món bán chạy sẽ được tải từ cơ sở dữ liệu --></p>
+      </div>
+    </div>
+
+    <table class="staff-table">
+      <thead>
+        <tr>
+          <th>Tên nhân viên</th>
+          <th>Món bán chạy</th>
+          <th>Xóa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dữ liệu báo cáo theo nhân viên sẽ được tải từ cơ sở dữ liệu -->
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
