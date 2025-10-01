@@ -1,37 +1,6 @@
 # Restaurant_Management_Software
 
-# Backend – Invoice, Staff, Report Module
-
-##  Mục tiêu
-Xây dựng API cho các chức năng:
-- **Invoice**: quản lý hóa đơn (tạo, xem chi tiết, danh sách).
-- **Staff**: quản lý nhân viên (thêm, sửa, xóa, xem danh sách).
-- **Report**: thống kê doanh thu và top món ăn.
-
-##  Cấu trúc thư mục mẫu có thể tùy chỉnh
-backend/src/
-|
-├── models/
-│ ├── Invoice.js
-│ └── Staff.js
-│
-├── controllers/
-│ ├── invoiceController.js
-│ ├── staffController.js
-│ └── reportController.js
-│
-├── routes/
-│ ├── invoiceRoutes.js
-│ ├── staffRoutes.js
-│ └── reportRoutes.js
-│
-├── tests/
-│ ├── invoice.test.js
-│ ├── staff.test.js
-│ └── report.test.js
-│
-├── app.js
-└── server.js
+c
 
 r
 Sao chép mã
