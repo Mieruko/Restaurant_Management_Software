@@ -1,6 +1,7 @@
 # Restaurant_Management_Software
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Backend – Tables, Menu, Order Module
 
 ## Mục tiêu
@@ -108,6 +109,8 @@ Có thể dùng dữ liệu mock trong controller trước khi tích hợp datab
 Khi FE chưa hoàn thành, test API bằng Postman hoặc npm test.
 Sau khi hoàn thành, commit code và tạo Pull Request vào develop.
 =======
+=======
+>>>>>>> feature/backend-invoice
 c
 
 r
@@ -150,5 +153,9 @@ Ghi chú cho team
 Đảm bảo API trả đúng format như trong docs/api-spec.md.
 Có thể dùng dữ liệu mock trong controller trước khi kết nối database.
 Test API bằng Postman hoặc file test để chắc chắn chạy đúng.
+<<<<<<< HEAD
+Sau khi hoàn thiện, commit và tạo Pull Request vào develop.
+>>>>>>> feature/backend-invoice
+=======
 Sau khi hoàn thiện, commit và tạo Pull Request vào develop.
 >>>>>>> feature/backend-invoice
