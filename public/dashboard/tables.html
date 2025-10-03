@@ -52,7 +52,7 @@
       item.addEventListener('click', () => {
         const maBan = item.getAttribute('data-ban');
 
-        fetch(`get_order_details.php?ma_ban=${maBan}`)
+        fetch(`/api/get_order_details?ma_ban=${maBan}`)
           .then(res => res.text())
           .then(html => {
             document.getElementById('order-details').innerHTML = html;
