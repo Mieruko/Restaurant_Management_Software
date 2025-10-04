@@ -46,12 +46,12 @@ body {
 }
 
 /* Nội dung bên phải */
-.main {
+/* .main {
   flex: 1;
   padding: 40px 60px;
   background-color: rgba(255, 255, 255, 0.95);
   overflow-y: auto;
-}
+} */
 
 .main h1 {
   font-size: 28px;

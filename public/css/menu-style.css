@@ -1,91 +1,14 @@
-/* Reset & font */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-}
+/* Menu page-specific styles only (layout provided by table-style.css) */
+* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif }
 
-/* Layout chính */
-body {
-  display: flex;
-  height: 100vh;
-  background: linear-gradient(to right, #ff6f3c, #ffe0cc);
-}
-
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background-color: #d63f2b;
-  color: white;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 150px);
   gap: 20px;
+  justify-items: center;
+  align-items: center;
 }
-
-.sidebar h2 {
-  font-size: 22px;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 12px 16px;
-  border-radius: 6px;
-  background-color: #e74c3c;
-  text-align: center;
-  transition: background 0.3s;
-}
-
-.sidebar a:hover {
-  background-color: #ff5e4d;
-}
-
-/* Nội dung bên phải */
-.main {
-  flex: 1;
-  padding: 40px 60px;
-  background-color: rgba(255, 255, 255, 0.95);
-  overflow-y: auto;
-}
-
-.main h1 {
-  font-size: 28px;
-  color: #d63f2b;
-  margin-bottom: 10px;
-}
-
-.main p {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 30px;
-}
-
-/* Nút thêm */
-.add-button {
-  padding: 10px 20px;
-  background-color: #d63f2b;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 6px 0 #a83222, 0 6px 15px rgba(0,0,0,0.2);
-  transition: all 0.2s ease;
-  margin-bottom: 30px;
-}
-
-.add-button:hover {
-  background-color: #ff5e4d;
-  transform: translateY(-2px);
-}
-
-/* Lưới món ăn: 6 cột × 4 hàng */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -136,7 +59,6 @@ body {
   border-radius: 0 0 6px 6px;
 }
 
-/* Modal styles for menu page */
 .modal-backdrop { position: fixed; inset: 0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); z-index:9999; }
 .modal-backdrop.show { display:flex; }
 .modal-card { background:#fff; padding:18px; border-radius:8px; width:420px; max-width:92%; box-shadow:0 8px 24px rgba(0,0,0,0.15); }

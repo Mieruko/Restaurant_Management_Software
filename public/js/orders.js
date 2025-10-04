@@ -91,6 +91,9 @@ async function loadMenuAndTables(){
     tableSelect.appendChild(opt);
   });
 
+  // Ensure we recalc total / enabled state when table selection changes
+  tableSelect.addEventListener('change', () => calculateTotal());
+
   // attach qty change listeners and +/- buttons
   document.querySelectorAll('#menuList .qty').forEach(inp => inp.addEventListener('input', (e)=>{
     let v = Number(e.target.value) || 0; if(v < 0) e.target.value = 0; if(v>99) e.target.value=99; calculateTotal();

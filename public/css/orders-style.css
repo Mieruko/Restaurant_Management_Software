@@ -1,0 +1,5 @@
+/* Orders page-specific styles only (layout comes from table-style.css / theme.css) */
+.staff-table { width:100%; }
+.staff-table th { color: var(--brand); }
+.add-button { padding:8px 14px }
+.center { display:flex; align-items:center; gap:8px }

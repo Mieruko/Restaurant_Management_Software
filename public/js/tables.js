@@ -71,41 +71,66 @@ async function loadTables(){
         statusEl.innerText = status || 'Trống';
       }
     })();
-  // controls container
+  // controls container (View / Edit / Delete) or manager select
   const ctrl = document.createElement('div');
   ctrl.className = 'table-ctrl';
   ctrl.style.marginTop = '8px';
-    // if manager mode, show a select to change status
-    if (MANAGER_MODE) {
-      const sel = document.createElement('select');
-      ['Trống','Đang sử dụng','Đã đặt','Đang dọn','Khóa'].forEach(s => {
-        const opt = document.createElement('option'); opt.value = s; opt.innerText = s; if (s === status) opt.selected = true; sel.appendChild(opt);
-      });
-      sel.addEventListener('change', async (e) => {
-        const newStatus = e.target.value;
-        try{
-          const r = await fetch('/api/tables/' + id, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ trangThai: newStatus }) });
-          if (!r.ok) { alert('Cập nhật trạng thái thất bại'); return; }
-          // refresh
-          await loadTables();
-        }catch(err){ alert('Lỗi khi cập nhật trạng thái'); }
-      });
-      ctrl.appendChild(sel);
-    } else {
-      // nicer edit button that opens a modal form
-      const editBtn = document.createElement('button');
-      editBtn.className = 'btn-ghost small-edit';
-      editBtn.style.fontSize = '0.9em';
-      // pencil svg icon
-      editBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-        <span>Sửa</span>
-      `;
-      editBtn.addEventListener('click', async () => {
-        openEditModal({ id, name, status, so_nguoi: t.so_nguoi, vi_tri: t.vi_tri });
-      });
-      ctrl.appendChild(editBtn);
-    }
+  if (MANAGER_MODE) {
+    const sel = document.createElement('select');
+    ['Trống','Đang sử dụng','Đã đặt','Đang dọn','Khóa'].forEach(s => {
+      const opt = document.createElement('option'); opt.value = s; opt.innerText = s; if (s === status) opt.selected = true; sel.appendChild(opt);
+    });
+    sel.addEventListener('change', async (e) => {
+      const newStatus = e.target.value;
+      try{
+        const r = await fetch('/api/tables/' + id, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ trangThai: newStatus }) });
+        if (!r.ok) { alert('Cập nhật trạng thái thất bại'); return; }
+        await loadTables();
+      }catch(err){ alert('Lỗi khi cập nhật trạng thái'); }
+    });
+    ctrl.appendChild(sel);
+  } else {
+    // View button
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'btn btn-small btn-view';
+    viewBtn.innerText = 'Xem';
+    viewBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      try{
+        const r = await fetch(`/api/orders/get_order_details?ma_ban=${id}`);
+        if (r.ok) {
+          const html = await r.text();
+          document.getElementById('order-details').innerHTML = html;
+        } else {
+          document.getElementById('order-details').innerHTML = '<p>Không có dữ liệu order cho bàn này.</p>';
+        }
+      }catch(e){ document.getElementById('order-details').innerHTML = '<p>Lỗi khi tải dữ liệu.</p>'; }
+    });
+
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-small btn-edit';
+    editBtn.innerText = 'Sửa';
+    editBtn.addEventListener('click', (e) => { e.stopPropagation(); openEditModal({ id, name, status, so_nguoi: t.so_nguoi, vi_tri: t.vi_tri }); });
+
+    // Delete button
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-small btn-delete';
+    delBtn.innerText = 'Xóa';
+    delBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if(!confirm('Xóa bàn này?')) return;
+      try{
+        const r = await fetch('/api/tables/' + id, { method: 'DELETE' });
+        if(!r.ok) return alert('Xóa thất bại');
+        await loadTables();
+      }catch(err){ alert('Lỗi khi xóa'); }
+    });
+
+    ctrl.appendChild(viewBtn);
+    ctrl.appendChild(editBtn);
+    ctrl.appendChild(delBtn);
+  }
 
     div.appendChild(label);
     div.appendChild(statusEl);

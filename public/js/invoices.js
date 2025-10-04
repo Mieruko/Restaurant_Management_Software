@@ -26,7 +26,7 @@ async function loadInvoices(){
       <td>${orderId}</td>
       <td>${tableId}</td>
       <td>${customer}</td>
-      <td>${(status && String(status).toLowerCase().includes('đã')) ? '<span class="text-success">Đã thanh toán</span>' : `<button data-id="${id}" class="pay">Thanh toán</button>`}</td>
+  <td>${(status && String(status).toLowerCase().includes('đã')) ? '<span class="text-success">Đã thanh toán</span>' : `<button data-id="${id}" data-total="${total}" class="pay btn btn-sm btn-outline-primary">Thanh toán</button>`}</td>
       <td><button data-id="${id}" class="del">Xóa</button></td>
     `;
     tbody.appendChild(tr);
@@ -65,18 +65,49 @@ window.addEventListener('DOMContentLoaded', () => {
       if(confirm('Xác nhận xóa?')) deleteInvoice(id);
     }
     if(e.target.matches('.pay')){
-      let id = e.target.getAttribute('data-id');
+      // open payment modal
+      const btn = e.target.closest('.pay');
+      const id = btn && btn.getAttribute('data-id');
+      const total = btn && btn.getAttribute('data-total');
       if(!id) return;
-      // ask for payment method
-      const method = prompt('Phương thức thanh toán (Tiền mặt / Thẻ / Khác)', 'Tiền mặt');
-      if(!method) return;
-      if(confirm('Xác nhận thanh toán hoá đơn #' + id + ' bằng ' + method + '?')){
-        id = isNaN(Number(id)) ? id : Number(id);
-        fetch('/api/invoices/' + id + '/pay', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ method }) })
-          .then(r => { if(!r.ok) throw new Error('Thanh toán lỗi'); return r.json(); })
-          .then(()=> loadInvoices())
-          .catch(err => alert('Thanh toán lỗi'));
-      }
+      // populate modal
+      const pm = document.getElementById('paymentModal');
+      const pmInvoice = document.getElementById('pm-invoice-id');
+      const pmTotal = document.getElementById('pm-total');
+      if(pmInvoice) pmInvoice.textContent = '#' + id;
+      if(pmTotal) pmTotal.textContent = (Number(total) ? Number(total).toLocaleString('vi-VN') + '₫' : '0₫');
+      pm.classList.add('show'); pm.setAttribute('aria-hidden','false');
+    }
+  });
+
+  // Payment modal handlers
+  const paymentModal = document.getElementById('paymentModal');
+  const pmClose = document.getElementById('paymentModalClose');
+  const pmCancel = document.getElementById('pm-cancel');
+  const pmConfirm = document.getElementById('pm-confirm');
+  const pmSpinner = document.getElementById('pm-spinner');
+
+  function closePM(){ if(paymentModal){ paymentModal.classList.remove('show'); paymentModal.setAttribute('aria-hidden','true'); } }
+  pmClose && pmClose.addEventListener('click', closePM);
+  pmCancel && pmCancel.addEventListener('click', closePM);
+  // backdrop click closes
+  document.querySelector('[data-pm-backdrop]')?.addEventListener('click', closePM);
+
+  pmConfirm && pmConfirm.addEventListener('click', async () => {
+    const pmInvoice = document.getElementById('pm-invoice-id')?.textContent?.replace('#','') || '';
+    const method = document.querySelector('input[name="pm-method"]:checked')?.value || 'Tiền mặt';
+    const note = document.getElementById('pm-note')?.value || '';
+    if(!pmInvoice) return alert('Không xác định hoá đơn');
+    try{
+      pmSpinner && (pmSpinner.style.display = 'flex'); pmConfirm.disabled = true;
+      const res = await fetch('/api/invoices/' + encodeURIComponent(pmInvoice) + '/pay', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ method, note }) });
+      if(!res.ok) throw new Error('Thanh toán lỗi');
+      await loadInvoices();
+      closePM();
+    }catch(err){
+      console.error(err); alert('Thanh toán thất bại');
+    }finally{
+      pmSpinner && (pmSpinner.style.display = 'none'); pmConfirm.disabled = false;
     }
   });
 });

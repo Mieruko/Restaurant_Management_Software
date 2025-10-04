@@ -1,4 +1,11 @@
-/* Shared UI tokens & components for dashboard */
+
+    body {
+      display: flex;
+      height: 100vh;
+      background: linear-gradient(to right, #ff6f3c, #ffe0cc);
+    }
+
+
 :root{
   --brand-500: #d63f2b;
   --brand-600: #a83222;
@@ -19,10 +26,10 @@ body { background: linear-gradient(90deg,#ff6f3c 0%, #ffe0cc 100%); }
 .card{ background:var(--card-bg); border-radius:10px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.06); }
 .grid{ display:grid; gap:12px }
 .staff-table, .controls-table{ width:100%; border-collapse:collapse }
-.staff-table th, .staff-table td{ padding:10px; border-bottom:1px solid #f3f4f6 }
+/* Table padding/borders are handled globally in theme.css; keep these selectors for legacy overrides only */
 .btn { padding:6px 10px; border-radius:6px; border:none; cursor:pointer }
 .btn.ghost{ background:transparent; border:1px solid #e6e7eb }
 .center{ display:flex; align-items:center; gap:8px }
 
-/* responsive helpers */
+
 @media (max-width:900px){ .sidebar{ display:none } .main{ padding:18px } }

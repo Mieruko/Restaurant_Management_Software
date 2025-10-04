@@ -23,9 +23,9 @@
 }
 .top-dishes { list-style:none; padding:0; margin:0; }
 .top-dishes li { padding:8px 6px; border-bottom:1px dashed #eef2f7; display:flex; justify-content:space-between; }
-.staff-table { width:100%; border-collapse:collapse; margin-top:12px; }
-.staff-table thead th { text-align:left; padding:8px; background:#fafafa; border-bottom:1px solid #e6e6e6; }
-.staff-table tbody td { padding:8px; border-bottom:1px solid #f3f4f6; }
+.staff-table { width:100%; }
+.staff-table thead th { text-align:left; padding:8px; }
+.staff-table tbody td { padding:8px; }
 .muted { color:#6b7280; font-size:13px; }
 
 /* badges */
