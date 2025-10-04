@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Quản lý bàn ăn</title>
   <link rel="stylesheet" href="../css/table-style.css">
+  <link rel="stylesheet" href="../css/theme.css">
 </head>
 <body>
 
@@ -24,45 +25,21 @@
     <h1>Quản lý bàn ăn</h1>
     <p>Danh sách bàn trong nhà hàng</p>
     <button class="add-button">+ Thêm bàn</button>
-
-    <!-- Sơ đồ bàn ăn -->
-    <div class="table-grid">
-      <div class="table-item" data-ban="1">Bàn 1</div>
-      <div class="table-item" data-ban="2">Bàn 2</div>
-      <div class="table-item" data-ban="3">Bàn 3</div>
-      <div class="table-item" data-ban="4">Bàn 4</div>
-      <div class="table-item" data-ban="5">Bàn 5</div>
-      <div class="table-item" data-ban="6">Bàn 6</div>
-      <div class="table-item" data-ban="7">Bàn 7</div>
-      <div class="table-item" data-ban="8">Bàn 8</div>
-      <div class="table-item" data-ban="9">Bàn 9</div>
-      <div class="table-item" data-ban="10">Bàn 10</div>
-    </div>
-
-    <!-- Chi tiết món ăn đã gọi -->
+    <!-- Chi tiết món ăn đã gọi (moved higher for visibility) -->
     <div id="order-details" class="order-list">
       <h2>Chi tiết món ăn đã gọi</h2>
       <p>Chọn một bàn để xem các món đã gọi.</p>
     </div>
+
+    <!-- Sơ đồ bàn ăn (dynamically loaded) -->
+    <div class="table-grid">
+      <!-- populated by public/js/tables.js -->
+    </div>
   </div>
 
-  <!-- Script xử lý click -->
-  <script>
-    document.querySelectorAll('.table-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const maBan = item.getAttribute('data-ban');
-
-        fetch(`/api/get_order_details?ma_ban=${maBan}`)
-          .then(res => res.text())
-          .then(html => {
-            document.getElementById('order-details').innerHTML = html;
-          })
-          .catch(err => {
-            document.getElementById('order-details').innerHTML = "<p>Lỗi khi tải dữ liệu.</p>";
-          });
-      });
-    });
-  </script>
+    <script src="../js/tables.js"></script>
+    <!-- <script src="../js/auth-check.js"></script> -->
+    <!-- <script src="../js/layout-fixes.js"></script> -->
 
 </body>
 </html>

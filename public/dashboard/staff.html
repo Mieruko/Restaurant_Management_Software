@@ -21,28 +21,60 @@
 
   <!-- Main content -->
   <div class="main">
-    <h1>Quản lý nhân viên</h1>
-    <button class="add-button">+ Thêm nhân viên</button>
-    <table class="staff-table">
-      <thead>
-        <tr>
-          <th>Tên</th>
-          <th>Ngày sinh</th>
-          <th>Giới tính</th>
-          <th>Chức vụ</th>
-          <th>SĐT</th>
-          <th>Địa chỉ</th>
-          <th>Ngày vào làm</th>
-          <th>Trạng thái</th>
-          <th>Sửa</th>
-          <th>Xóa</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Dữ liệu nhân viên sẽ được tải từ cơ sở dữ liệu -->
-      </tbody>
-    </table>
+    <div style="display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:12px">
+      <h1>Nhân viên</h1>
+      <div class="center">
+        <input id="staffSearch" placeholder="Tìm tên hoặc SĐT" style="padding:8px;border-radius:6px;border:1px solid #e5e7eb" />
+        <button class="add-button">+ Thêm nhân viên</button>
+      </div>
+    </div>
+    <div style="overflow:auto">
+      <table id="staffTable" class="table" style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="text-align:left;background:#f3f4f6">
+            <th style="padding:8px;border-bottom:1px solid #e5e7eb">Tên</th>
+            <th style="padding:8px;border-bottom:1px solid #e5e7eb">SĐT</th>
+            <th style="padding:8px;border-bottom:1px solid #e5e7eb">Giới tính</th>
+            <th style="padding:8px;border-bottom:1px solid #e5e7eb">Chức vụ</th>
+            <th style="padding:8px;border-bottom:1px solid #e5e7eb">Địa chỉ</th>
+            <th style="padding:8px;border-bottom:1px solid #e5e7eb">Hành động</th>
+          </tr>
+        </thead>
+        <tbody id="staffTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Modal: Add / Edit Staff -->
+    <div id="staffModal" class="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);align-items:center;justify-content:center">
+      <div style="background:#fff;padding:18px;border-radius:8px;min-width:320px;max-width:600px">
+        <h3 id="staffModalTitle">Thêm nhân viên</h3>
+        <form id="staffForm">
+          <input type="hidden" id="staffId" />
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input id="tenNhanVien" placeholder="Họ và tên" style="flex:1;padding:8px;border:1px solid #e5e7eb;border-radius:4px" required />
+            <input id="sdt" placeholder="SĐT" style="width:160px;padding:8px;border:1px solid #e5e7eb;border-radius:4px" />
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <select id="gioiTinhStaff" style="padding:8px;border:1px solid #e5e7eb;border-radius:4px">
+              <option value="">-- Giới tính --</option>
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+              <option value="Khác">Khác</option>
+            </select>
+            <input id="chucVu" placeholder="Chức vụ" style="flex:1;padding:8px;border:1px solid #e5e7eb;border-radius:4px" />
+          </div>
+          <div style="margin-bottom:8px">
+            <input id="diaChiStaff" placeholder="Địa chỉ" style="width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:4px" />
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button type="button" id="staffCancelBtn" class="btn ghost">Hủy</button>
+            <button type="submit" id="staffSaveBtn" class="btn">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
+  <script src="../js/auth-check.js"></script>
 </body>
 </html>

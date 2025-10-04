@@ -1,0 +1,28 @@
+/* Shared UI tokens & components for dashboard */
+:root{
+  --brand-500: #d63f2b;
+  --brand-600: #a83222;
+  --accent-100: #fff3e0;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+}
+*{box-sizing:border-box;font-family:'Segoe UI',system-ui,Arial,sans-serif}
+body { background: linear-gradient(90deg,#ff6f3c 0%, #ffe0cc 100%); }
+.sidebar{ width:220px; background:var(--brand-500); color:#fff; padding:26px 18px; display:flex; flex-direction:column; gap:12px; }
+.sidebar h2{ margin:0 0 6px 0; font-size:20px; text-align:center }
+.sidebar a{ display:block; color:#fff; text-decoration:none; padding:10px 12px; border-radius:8px; background:rgba(0,0,0,0.06); font-weight:700; transition:transform .12s ease, background .12s }
+.sidebar a.active, .sidebar a:hover{ background:rgba(255,255,255,0.07); transform:translateY(-2px) }
+.main{ flex:1; padding:32px; background: rgba(255,255,255,0.95); min-height:100vh }
+.page-title{ color:var(--brand-500); font-size:24px; margin-bottom:10px }
+.muted{ color:var(--muted) }
+.add-button{ background:var(--brand-500); color:#fff; padding:8px 12px; border-radius:8px; border:none; box-shadow:0 6px 0 var(--brand-600); cursor:pointer }
+.card{ background:var(--card-bg); border-radius:10px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.06); }
+.grid{ display:grid; gap:12px }
+.staff-table, .controls-table{ width:100%; border-collapse:collapse }
+.staff-table th, .staff-table td{ padding:10px; border-bottom:1px solid #f3f4f6 }
+.btn { padding:6px 10px; border-radius:6px; border:none; cursor:pointer }
+.btn.ghost{ background:transparent; border:1px solid #e6e7eb }
+.center{ display:flex; align-items:center; gap:8px }
+
+/* responsive helpers */
+@media (max-width:900px){ .sidebar{ display:none } .main{ padding:18px } }

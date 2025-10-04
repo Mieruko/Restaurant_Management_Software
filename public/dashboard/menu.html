@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Quản lý thực đơn</title>
   <link rel="stylesheet" href="../css/menu-style.css">
+  <link rel="stylesheet" href="../css/theme.css">
 </head>
 <body>
 
@@ -20,23 +21,28 @@
 
   <div class="main">
     <h1>Quản lý thực đơn</h1>
-    <button class="add-button">+ Thêm món ăn</button>
-    <table class="staff-table">
-      <thead>
-        <tr>
-          <th>Tên món</th>
-          <th>Loại</th>
-          <th>Giá</th>
-          <th>Trạng thái</th>
-          <th>Sửa</th>
-          <th>Xóa</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Dữ liệu món ăn sẽ được tải từ cơ sở dữ liệu -->
-      </tbody>
-    </table>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <p>Danh sách món ăn trong cơ sở dữ liệu</p>
+      <button class="add-button" id="addMenuBtn">+ Thêm món ăn</button>
+    </div>
+    <div class="menu-grid" id="menuGrid">
+      <!-- populated by public/js/menu.js -->
+    </div>
+
+    <!-- Modal for creating/editing menu items -->
+    <div id="menuModalBackdrop" class="modal-backdrop">
+      <div class="modal-card">
+        <h3>Thêm / Sửa món ăn</h3>
+        <div class="modal-row"><label>Tên món</label><input id="m_name" /></div>
+        <div class="modal-row"><label>Loại</label><input id="m_type" /></div>
+        <div class="modal-row"><label>Giá</label><input id="m_price" type="number" /></div>
+        <div class="modal-row"><label>Ảnh (URL)</label><input id="m_image" /></div>
+        <div class="modal-actions"><button id="m_cancel" class="btn-ghost">Hủy</button><button id="m_save" class="btn-primary">Lưu</button></div>
+      </div>
+    </div>
   </div>
 
 </body>
+  <script src="../js/menu.js"></script>
+  <script src="../js/auth-check.js"></script>
 </html>

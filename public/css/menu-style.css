@@ -135,3 +135,12 @@ body {
   font-weight: bold;
   border-radius: 0 0 6px 6px;
 }
+
+/* Modal styles for menu page */
+.modal-backdrop { position: fixed; inset: 0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); z-index:9999; }
+.modal-backdrop.show { display:flex; }
+.modal-card { background:#fff; padding:18px; border-radius:8px; width:420px; max-width:92%; box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+.modal-row { margin-bottom:10px; display:flex; flex-direction:column; }
+.modal-row label { margin-bottom:6px; color:#374151; }
+.modal-row input { padding:8px; border:1px solid #e5e7eb; border-radius:6px; }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end; }

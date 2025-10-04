@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <title>Quản lý hóa đơn</title>
   <link rel="stylesheet" href="../css/staff-style.css">
-</head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
 <body>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Sidebar -->
   <div class="sidebar">
     <h2>Quản lý nhà hàng</h2>
@@ -22,7 +23,20 @@
   <!-- Main content -->
   <div class="main">
     <h1>Quản lý hóa đơn</h1>
-    <button class="add-button">+ Tạo hóa đơn</button>
+    <button class="add-button" id="openInvoiceModal">+ Tạo hóa đơn</button>
+    <!-- Modal tạo hóa đơn -->
+    <div id="invoiceModal" class="modal" style="display:none; background:rgba(0,0,0,0.25); position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:1000; align-items:center; justify-content:center;">
+      <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:400px; width:95vw;">
+        <div class="modal-content p-4" style="border-radius:16px; box-shadow:0 4px 24px #0002; border:1.5px solid #e0e0e0; background:#fff;">
+          <h2 style="font-size:1.3rem; font-weight:700; margin-bottom:16px; color:#2d3748;">Tạo hóa đơn mới</h2>
+          <div class="mb-3">Nhập mã đơn hàng: <input id="invoiceOrderId" class="form-control d-inline-block w-auto" style="min-width:120px; display:inline-block;" placeholder="Order ID" /></div>
+          <div class="mt-4 d-flex justify-content-end gap-2">
+            <button id="submitInvoice" class="btn btn-primary" style="min-width:120px;">Tạo hóa đơn</button>
+            <button id="cancelInvoice" class="btn btn-secondary" style="min-width:80px;">Huỷ</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <table class="staff-table">
       <thead>
         <tr>
@@ -43,5 +57,6 @@
     </table>
   </div>
 
+<script src="../js/invoices.js"></script>
 </body>
 </html>

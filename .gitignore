@@ -1,1 +1,32 @@
-node_modules
+node_modules/
+
+# Temporary scripts and prints (archived)
+/tmp_prints/
+tmp_*.js
+
+# Environment files
+.env
+.env.local
+.env.*
+
+# Logs
+npm-debug.log*
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Coverage and build
+coverage/
+dist/
+build/
+
+# Misc
+.pids
+.cache
+/.sass-cache

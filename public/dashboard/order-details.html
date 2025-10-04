@@ -2,8 +2,10 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chi tiết đơn hàng</title>
   <link rel="stylesheet" href="../css/staff-style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -20,7 +22,13 @@
 
   <div class="main">
     <h1>Chi tiết đơn hàng</h1>
-    <table class="staff-table">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>Tổng: <strong id="orderTotalDisplay">0</strong> VNĐ</div>
+      <div>
+        <button id="printInvoice" class="btn btn-outline-secondary btn-sm">In hoá đơn</button>
+      </div>
+    </div>
+    <table class="staff-table table table-striped">
       <thead>
         <tr>
           <th>Mã đơn</th>
@@ -36,5 +44,179 @@
     </table>
   </div>
 
+  <script>
+    // escape to avoid HTML injection
+    function escapeHtml(str){
+      if(str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Load and render a single order (or show picker when id missing)
+    async function loadOrder(){
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id') || params.get('ma_order') || params.get('orderId') || params.get('orderid');
+      const tbody = document.querySelector('.staff-table tbody');
+      tbody.innerHTML = '';
+      if(!id){
+        await showOrderPicker(tbody);
+        return;
+      }
+
+      try{
+        const res = await fetch('/api/orders/' + encodeURIComponent(id));
+        if(!res.ok){ tbody.innerHTML = '<tr><td colspan="5">Không tìm thấy order</td></tr>'; return; }
+        const o = await res.json();
+        const orderId = o.id || o.ma_order || o.orderId || o.order_id;
+        const items = o.items || o.OrderItems || o.order_items || o.CHI_TIET_ORDERs || [];
+
+        // load menu to resolve names when missing
+        let MENU = [];
+        try { const mr = await fetch('/api/menu'); if (mr.ok) MENU = await mr.json(); } catch(e) { MENU = []; }
+
+        if(items.length === 0){ tbody.innerHTML = '<tr><td colspan="5">Order chưa có món</td></tr>'; return; }
+
+        // check if this order already has an invoice
+        let hasInvoice = false;
+        try{
+          const ir = await fetch('/api/invoices');
+          if(ir.ok){
+            const invs = await ir.json();
+            hasInvoice = (invs || []).some(inv => String(inv.orderId || (inv.raw && (inv.raw.ma_order || inv.raw.orderId))) === String(orderId));
+          }
+        }catch(e){ /* ignore */ }
+
+        let total = 0;
+        items.forEach((it, index) => {
+          const tr = document.createElement('tr');
+          const monId = it.monId || it.ma_mon || it.mon_id || it.id;
+          let name = it.tenMon || it.name || monId || '';
+          if (!name && MENU && MENU.length) {
+            const m = MENU.find(x => String(x.id) === String(monId) || String(x.id) === String(it.ma_mon));
+            if (m) name = m.tenMon || m.ten_mon || m.name;
+          }
+          const safeName = escapeHtml(name);
+          const qty = Number(it.soLuong || it.so_luong || it.qty || it.quantity || 1) || 0;
+          const priceNum = Number(it.gia || it.gia_tai_thoi_diem || it.price || 0) || 0;
+          const price = priceNum.toLocaleString();
+          total += qty * priceNum;
+
+          const statusValue = it.status || it.tinh_trang || 'Chưa chế biến';
+          const itemKey = it.itemId || it.id || (it.ma_order && it.ma_mon ? `${it.ma_order}_${it.ma_mon}` : undefined);
+          const statusSelect = `<select class="form-select form-select-sm item-status" data-index="${index}" data-itemkey="${escapeHtml(itemKey||'')}">
+            <option${statusValue==='Chưa chế biến'?' selected':''}>Chưa chế biến</option>
+            <option${statusValue==='Đang chế biến'?' selected':''}>Đang chế biến</option>
+            <option${statusValue==='Hoàn thành'?' selected':''}>Hoàn thành</option>
+          </select>`;
+
+          tr.innerHTML = `<td>${escapeHtml(orderId)}</td><td>${safeName}</td><td>${qty}</td><td>${price}</td><td>${statusSelect}</td>`;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById('orderTotalDisplay').innerText = total.toLocaleString();
+
+        // Update print button state if invoice exists
+        const printBtn = document.getElementById('printInvoice');
+        if (printBtn) {
+          if (hasInvoice) {
+            printBtn.disabled = true;
+            printBtn.innerText = 'Đã tạo hoá đơn';
+            printBtn.classList.remove('btn-outline-secondary');
+            printBtn.classList.add('btn-success');
+          } else {
+            printBtn.disabled = false;
+            printBtn.innerText = 'In hoá đơn';
+            printBtn.classList.remove('btn-success');
+            printBtn.classList.add('btn-outline-secondary');
+          }
+        }
+
+        // attach status change handlers
+        document.querySelectorAll('.item-status').forEach(sel => {
+          sel.addEventListener('change', async (e) => {
+            const idx = e.target.getAttribute('data-index');
+            const itemKey = e.target.getAttribute('data-itemkey');
+            const newStatus = e.target.value;
+            let url, body;
+            if (itemKey) {
+              url = `/api/orders/items/${encodeURIComponent(itemKey)}`;
+              body = JSON.stringify({ status: newStatus, orderId: orderId });
+            } else {
+              url = `/api/orders/${encodeURIComponent(orderId)}/items/${idx}`;
+              body = JSON.stringify({ status: newStatus });
+            }
+            const resp = await fetch(url, { method: 'PUT', headers: {'Content-Type':'application/json'}, body });
+            if(!resp.ok){ alert('Cập nhật trạng thái lỗi'); }
+          });
+        });
+
+      }catch(err){
+        console.error('loadOrder error', err);
+        tbody.innerHTML = '<tr><td colspan="5">Lỗi khi tải dữ liệu</td></tr>';
+      }
+    }
+
+    // If no id provided, show a picker of recent orders
+    async function showOrderPicker(container){
+      try{
+        const res = await fetch('/api/orders');
+        if(!res.ok) { container.innerHTML = '<tr><td colspan="5">Không có id</td></tr>'; return; }
+        const list = await res.json();
+        if(!Array.isArray(list) || list.length === 0){ container.innerHTML = '<tr><td colspan="5">Không có order sẵn có</td></tr>'; return; }
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="5">Chọn order: <select id="orderPicker">${list.map(o=>`<option value="${escapeHtml(o.id||o.ma_order)}">#${escapeHtml(o.id||o.ma_order)} - Bàn ${escapeHtml(o.tableId||o.ma_ban||'')}</option>`).join('')}</select> <button id="openOrder" class="btn btn-sm btn-primary">Mở</button></td>`;
+        container.appendChild(tr);
+        document.getElementById('openOrder').addEventListener('click', ()=>{
+          const sel = document.getElementById('orderPicker');
+          const id = sel.value;
+          if(id) window.location.search = '?id=' + encodeURIComponent(id);
+        });
+      }catch(e){ console.error('showOrderPicker error', e); container.innerHTML = '<tr><td colspan="5">Lỗi tải danh sách order</td></tr>'; }
+    }
+
+    // print invoice (mock) for current order
+    document.getElementById('printInvoice').addEventListener('click', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id') || params.get('ma_order') || params.get('orderId') || params.get('orderid');
+      if(!id) return alert('Không có order');
+      const res = await fetch('/api/orders/' + encodeURIComponent(id));
+      if(!res.ok) return alert('Không tìm thấy order');
+      const o = await res.json();
+      const orderId = o.id || o.ma_order || o.orderId || o.order_id;
+      const items = o.items || o.OrderItems || o.order_items || [];
+      let html = `<h1>Hoá đơn - Order #${escapeHtml(orderId)}</h1><p>Bàn: ${escapeHtml(o.tableId || o.ma_ban || '')}</p><table border="1" cellpadding="6" cellspacing="0"><tr><th>Món</th><th>SL</th><th>Giá</th><th>Tổng</th></tr>`;
+      let total = 0;
+      items.forEach(it => {
+        const qty = Number(it.soLuong || it.so_luong || it.qty || it.quantity || 1) || 0;
+        const price = Number(it.gia || it.gia_tai_thoi_diem || it.price || 0) || 0;
+        const line = qty * price;
+        total += line;
+        const name = it.tenMon || it.name || it.ten_mon || it.monId || it.ma_mon || '';
+        html += `<tr><td>${escapeHtml(name)}</td><td>${qty}</td><td>${price.toLocaleString()}</td><td>${line.toLocaleString()}</td></tr>`;
+      });
+      html += `</table><h3>Tổng: ${total.toLocaleString()} VNĐ</h3>`;
+      try{
+        const p = await fetch('/api/invoices/print', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ html }) });
+        if (!p.ok) throw new Error('Print failed');
+        const j = await p.json();
+        const link = j.publicUrl ? window.location.origin + j.publicUrl : (j.savedPath || '');
+        if (link) {
+          if (confirm('Hoá đơn đã được gửi in (mock). Mở file in?')) window.open(link, '_blank');
+          else alert('Hoá đơn đã được gửi in (mock). Saved: ' + (j.savedPath || j.publicUrl || ''));
+        } else {
+          alert('Hoá đơn đã được gửi in (mock). Saved: ' + (j.savedPath || ''));
+        }
+      }catch(e){ console.error('print error', e); alert('Gửi in lỗi'); }
+    });
+
+    document.addEventListener('DOMContentLoaded', loadOrder);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script src="../js/auth-check.js"></script>
 </html>
